@@ -3,9 +3,10 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft, Share2, MessageCircle } from "lucide-react";
 
-export default async function PostDetailPage({ params }: { params: { id: string } }) {
+export default async function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const post = await prisma.post.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: { author: { select: { name: true } } },
   });
 
@@ -46,7 +47,7 @@ export default async function PostDetailPage({ params }: { params: { id: string 
         </header>
 
         <div className="body-lg leading-[1.8] text-text-main font-sans space-y-8">
-          {post.content.split('\n').map((para, i) => (
+          {post.content.split('\n').map((para: string, i: number) => (
             para.trim() ? <p key={i}>{para}</p> : <br key={i} />
           ))}
         </div>

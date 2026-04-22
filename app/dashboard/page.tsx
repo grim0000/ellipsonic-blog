@@ -37,7 +37,7 @@ export default async function DashboardPage() {
 
       <div className="grid gap-6 animate-fade-in">
         {posts.length > 0 ? (
-          posts.map((post) => (
+          posts.map((post: any) => (
             <div key={post.id} className="card p-8 flex justify-between items-center hover:scale-[1.01]">
               <div>
                 <h3 className="text-xl font-serif mb-1">{post.title}</h3>
