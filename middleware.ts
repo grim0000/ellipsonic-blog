@@ -1,26 +1,21 @@
-import { auth } from "@/auth";
+import NextAuth from "next-auth";
+import { authConfig } from "./auth.config";
 import { NextResponse } from "next/server";
+
+const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth;
   const { nextUrl } = req;
 
   const isAuthPage = nextUrl.pathname.startsWith("/auth");
-  const isDashboardPage = nextUrl.pathname.startsWith("/dashboard");
-  const isNewPostPage = nextUrl.pathname.startsWith("/posts/new");
   const isAdminPage = nextUrl.pathname.startsWith("/admin");
 
   if (isAuthPage) {
     if (isLoggedIn) {
       return NextResponse.redirect(new URL("/dashboard", nextUrl));
     }
-    return null;
-  }
-
-  if (isDashboardPage || isNewPostPage) {
-    if (!isLoggedIn) {
-      return NextResponse.redirect(new URL("/auth/login", nextUrl));
-    }
+    return undefined;
   }
 
   if (isAdminPage) {
@@ -30,9 +25,9 @@ export default auth((req) => {
     }
   }
 
-  return null;
+  return undefined;
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/posts/new", "/admin/:path*", "/auth/:path*"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
