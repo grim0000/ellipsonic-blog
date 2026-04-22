@@ -41,12 +41,12 @@ export default async function Home() {
         <div className="flex justify-between items-end mb-12">
           <div>
             <h2 className="headline-md">Recent Essays</h2>
-            <p className="text-text-muted mt-2">Latest insights from our community of thinkers.</p>
+            <p className="text-muted mt-2">Latest insights from our community of thinkers.</p>
           </div>
-          <Link href="/archives" className="text-primary font-medium hover:underline">View all</Link>
+          <Link href="/archives" className="text-primary font-bold hover:underline" style={{ color: 'var(--accent)' }}>View all</Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
           {posts.length > 0 ? (
             posts.map((post: any) => (
               <PostCard key={post.id} post={post as any} />
@@ -54,11 +54,11 @@ export default async function Home() {
           ) : (
             // Mock posts for first-time preview
             [1, 2, 3].map((i) => (
-              <div key={i} className="card p-8 animate-fade-in opacity-50">
-                <div className="h-4 w-1/4 bg-surface-low rounded mb-4"></div>
-                <div className="h-8 w-3/4 bg-surface-low rounded mb-4"></div>
-                <div className="h-20 w-full bg-surface-low rounded mb-6"></div>
-                <div className="h-4 w-1/2 bg-surface-low rounded"></div>
+              <div key={i} className="card p-8 animate-fade-in" style={{ opacity: 0.5 }}>
+                <div style={{ height: '1rem', width: '25%', background: 'var(--surface-low)', marginBottom: '1rem', borderRadius: '4px' }}></div>
+                <div style={{ height: '2rem', width: '75%', background: 'var(--surface-low)', marginBottom: '1rem', borderRadius: '4px' }}></div>
+                <div style={{ height: '5rem', width: '100%', background: 'var(--surface-low)', marginBottom: '1rem', borderRadius: '4px' }}></div>
+                <div style={{ height: '1rem', width: '50%', background: 'var(--surface-low)', borderRadius: '4px' }}></div>
               </div>
             ))
           )}

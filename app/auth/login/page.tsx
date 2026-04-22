@@ -38,11 +38,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center container">
+    <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 80px)', padding: '2rem 1rem' }}>
       <div className="card w-full max-w-md p-10 animate-fade-in">
         <div className="text-center mb-10">
           <h1 className="headline-md mb-2">Welcome Back</h1>
-          <p className="text-text-muted text-sm font-sans">
+          <p className="text-muted text-sm">
             Sign in to continue to your editorial dashboard.
           </p>
         </div>

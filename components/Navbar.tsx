@@ -11,12 +11,15 @@ export default function Navbar() {
     <nav className="glass sticky top-0 z-50 py-4">
       <div className="container flex justify-between items-center">
         <Link href="/" className="headline-md font-serif tracking-tight">
-          Editorial<span className="text-primary">Lume</span>
+          Editorial<span className="text-primary" style={{color: 'var(--accent)'}}>Lume</span>
         </Link>
 
         <div className="flex items-center gap-8 font-sans text-sm font-medium">
           <Link href="/" className="hover:text-primary transition-colors">Essays</Link>
           <Link href="/archives" className="hover:text-primary transition-colors">Archives</Link>
+          {(session?.user as any)?.role === "ADMIN" && (
+            <Link href="/admin" className="text-tertiary font-bold hover:opacity-80 transition-opacity">Admin Portal</Link>
+          )}
           
           {session ? (
             <div className="flex items-center gap-6">
