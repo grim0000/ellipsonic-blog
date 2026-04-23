@@ -11,7 +11,7 @@ export default function Navbar() {
     <nav className="glass sticky top-0 z-50 py-5">
       <div className="container flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white transition-transform group-hover:rotate-12">
+          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white transition-all group-hover:rotate-12">
             <Feather size={20} />
           </div>
           <span className="font-display text-xl font-bold tracking-tight">
@@ -19,8 +19,8 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <div className="flex items-center gap-10 font-display text-[13px] font-bold uppercase tracking-widest">
-          <div className="hidden md:flex items-center gap-10">
+        <div className="flex items-center gap-8 font-display text-sm font-bold uppercase tracking-widest">
+          <div className="hidden md:flex gap-8">
             <Link href="/" className="hover:text-accent transition-colors">Dispatches</Link>
             <Link href="/archives" className="hover:text-accent transition-colors">Archives</Link>
           </div>
@@ -28,12 +28,12 @@ export default function Navbar() {
           <div className="h-4 w-px bg-outline mx-2 hidden md:block"></div>
           
           {session ? (
-            <div className="flex items-center gap-8">
+            <div className="flex items-center gap-6">
               <Link href="/dashboard" className="flex items-center gap-2 hover:text-accent transition-colors">
                 <LayoutDashboard size={16} />
                 Dashboard
               </Link>
-              <Link href="/posts/new" className="btn btn-primary py-2 px-6 text-[10px]">
+              <Link href="/posts/new" className="btn btn-primary py-2 px-6 text-xs">
                 <PlusCircle size={14} className="mr-2" />
                 New Entry
               </Link>
@@ -45,7 +45,7 @@ export default function Navbar() {
               </button>
             </div>
           ) : (
-            <Link href="/auth/login" className="btn btn-primary py-2 px-8 text-[11px]">
+            <Link href="/auth/login" className="btn btn-primary py-2 px-8 text-xs">
               Journal Access
             </Link>
           )}
