@@ -1,10 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, Share2, MessageCircle } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
-export default async function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function PostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+
   const post = await prisma.post.findUnique({
     where: { id },
     include: { author: { select: { name: true } } },
@@ -13,56 +14,57 @@ export default async function PostDetailPage({ params }: { params: Promise<{ id:
   if (!post) notFound();
 
   return (
-    <div className="container py-12 md:py-24 max-w-4xl">
-      <Link href="/" className="inline-flex items-center gap-2 text-text-muted hover:text-primary transition-colors mb-12 animate-fade-in text-sm font-medium">
-        <ChevronLeft size={16} />
+    <div className="container-reading section animate-in">
+      {/* Back Link */}
+      <Link
+        href="/"
+        className="flex items-center gap-2 text-muted mb-8"
+        style={{ fontSize: '0.85rem', fontWeight: 500, transition: 'color 0.2s' }}
+      >
+        <ArrowLeft size={16} />
         Back to Essays
       </Link>
 
-      <article className="animate-fade-in">
-        <header className="mb-16">
-          <div className="flex gap-4 mb-6">
-            <span className="text-xs uppercase tracking-widest font-bold text-tertiary">Culture</span>
-            <span className="text-xs text-text-muted">{new Date(post.createdAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
+      {/* Article Header */}
+      <header className="mb-8">
+        <span className="badge badge-category mb-4" style={{ display: 'inline-flex' }}>Culture</span>
+        <h1 className="display-lg" style={{ marginBottom: '1.5rem' }}>{post.title}</h1>
+        <div className="flex items-center gap-3">
+          <div className="avatar">{post.author.name?.[0]?.toUpperCase() || "U"}</div>
+          <div>
+            <p style={{ fontWeight: 600, fontSize: '0.9rem' }}>{post.author.name || "Anonymous"}</p>
+            <p className="text-muted" style={{ fontSize: '0.8rem' }}>
+              {new Date(post.createdAt).toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </p>
           </div>
-          
-          <h1 className="display-lg mb-8 leading-tight">{post.title}</h1>
-          
-          <div className="flex justify-between items-center py-8 border-y border-outline">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-surface-low border border-outline flex items-center justify-center font-serif text-lg">
-                {post.author.name?.[0] || "U"}
-              </div>
-              <div>
-                <p className="text-sm font-bold uppercase tracking-widest">Narrated by</p>
-                <p className="text-primary font-medium">{post.author.name || "Anonymous"}</p>
-              </div>
-            </div>
-            
-            <div className="flex gap-4">
-              <button className="p-2 rounded-full border border-outline hover:bg-surface-low transition-colors"><Share2 size={18} /></button>
-              <button className="p-2 rounded-full border border-outline hover:bg-surface-low transition-colors"><MessageCircle size={18} /></button>
-            </div>
-          </div>
-        </header>
-
-        <div className="body-lg leading-[1.8] text-text-main font-sans space-y-8">
-          {post.content.split('\n').map((para: string, i: number) => (
-            para.trim() ? <p key={i}>{para}</p> : <br key={i} />
-          ))}
         </div>
+      </header>
 
-        <footer className="mt-24 pt-12 border-t border-outline">
-          <div className="card p-12 bg-surface-low text-center">
-            <h3 className="headline-md mb-4">Join the Conversation</h3>
-            <p className="text-text-muted mb-8 max-w-lg mx-auto">Subscribe to our newsletter to receive weekly insights and editorial narratives directly in your inbox.</p>
-            <div className="flex max-w-md mx-auto gap-2">
-              <input type="email" placeholder="email@example.com" className="flex-1 p-4 rounded-full border border-outline outline-none focus:border-primary" />
-              <button className="btn btn-primary px-8">Subscribe</button>
-            </div>
-          </div>
-        </footer>
+      {/* Divider */}
+      <div style={{ height: '2px', background: 'var(--surface-high)', margin: '2rem 0', borderRadius: '1px' }} />
+
+      {/* Article Body */}
+      <article className="body-lg" style={{ color: 'var(--on-surface)', lineHeight: 1.85 }}>
+        {post.content.split("\n").map((paragraph: string, i: number) => (
+          <p key={i} style={{ marginBottom: '1.5rem' }}>{paragraph}</p>
+        ))}
       </article>
+
+      {/* Back Link Footer */}
+      <div style={{ marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid rgba(115,118,134,0.08)' }}>
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-muted"
+          style={{ fontSize: '0.85rem', fontWeight: 500 }}
+        >
+          <ArrowLeft size={16} />
+          Back to Essays
+        </Link>
+      </div>
     </div>
   );
 }

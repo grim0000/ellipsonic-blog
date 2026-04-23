@@ -1,10 +1,9 @@
 "use client";
 
-import { signIn } from "next-auth/react";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Lock, Mail, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -18,71 +17,57 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
 
-      if (result?.error) {
-        setError("Invalid email or password");
-      } else {
-        router.push("/dashboard");
-        router.refresh();
-      }
-    } catch (err) {
-      setError("An unexpected error occurred");
-    } finally {
+    if (result?.error) {
+      setError("Invalid email or password. Please try again.");
       setLoading(false);
+    } else {
+      router.push("/dashboard");
+      router.refresh();
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-100px)] py-12 px-6">
-      <div className="card w-full max-w-md p-12 animate-fade-in relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-1 bg-accent"></div>
-        
-        <div className="text-center mb-12">
-          <div className="w-12 h-12 bg-surface-low rounded-full flex items-center justify-center mx-auto mb-6">
-            <Lock size={20} className="text-accent" />
-          </div>
-          <h1 className="headline-md mb-3">Journal Access</h1>
-          <p className="text-text-muted text-sm max-w-[240px] mx-auto leading-relaxed">
-            Please authenticate to enter your personal editorial suite.
+    <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 72px)' }}>
+      <div className="card-static animate-in" style={{ width: '100%', maxWidth: '420px', padding: '2.5rem' }}>
+        <div className="text-center mb-8">
+          <h1 className="headline-md" style={{ marginBottom: '0.5rem' }}>Welcome Back</h1>
+          <p className="text-muted" style={{ fontSize: '0.9rem' }}>
+            Sign in to your editorial dashboard.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit}>
           {error && (
-            <div className="badge badge-danger w-full py-3 px-4 flex items-center justify-center animate-shake">
-              {error}
-            </div>
+            <div className="alert alert-error mb-6">{error}</div>
           )}
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-text-muted flex items-center gap-2">
-              <Mail size={12} /> Communication Address
-            </label>
+          <div className="form-group">
+            <label className="form-label" htmlFor="login-email">Email Address</label>
             <input
+              id="login-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full"
-              placeholder="e.g. author@ellipsonic.com"
+              className="form-input"
+              placeholder="name@example.com"
               required
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-text-muted flex items-center gap-2">
-              <Lock size={12} /> Secure Key
-            </label>
+          <div className="form-group">
+            <label className="form-label" htmlFor="login-password">Password</label>
             <input
+              id="login-password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full"
+              className="form-input"
               placeholder="••••••••"
               required
             />
@@ -91,19 +76,19 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="btn btn-primary w-full py-4 text-[11px] group"
+            className="btn btn-primary btn-full btn-lg mt-4"
+            style={{ opacity: loading ? 0.7 : 1 }}
           >
-            {loading ? "Authenticating..." : "Enter Workspace"}
-            {!loading && <ArrowRight size={14} className="ml-2 group-hover:translate-x-1 transition-transform" />}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
-        <div className="mt-12 text-center text-xs font-medium text-text-muted">
-          New to the collective?{" "}
-          <Link href="/auth/register" className="text-accent font-bold hover:underline transition-all">
-            Request Registration
+        <p className="text-center mt-6" style={{ fontSize: '0.85rem', color: 'var(--on-surface-variant)' }}>
+          Don&apos;t have an account?{" "}
+          <Link href="/auth/register" style={{ color: 'var(--primary-container)', fontWeight: 600 }}>
+            Register
           </Link>
-        </div>
+        </p>
       </div>
     </div>
   );

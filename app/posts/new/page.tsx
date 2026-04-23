@@ -1,65 +1,57 @@
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 import { createPost } from "@/lib/actions";
-import { PenTool, Send, Save } from "lucide-react";
 
-export default function NewPostPage() {
+export default async function NewPostPage() {
+  const session = await auth();
+  if (!session) redirect("/auth/login");
+
   return (
-    <div className="container py-24 max-w-4xl">
-      <div className="mb-16 animate-fade-in text-center">
-        <div className="inline-flex items-center gap-2 mb-6 badge badge-primary py-2 px-4">
-          <PenTool size={14} />
-          <span className="text-[10px] tracking-widest font-bold uppercase">Creative Manifest</span>
-        </div>
-        <h1 className="display-lg mb-6">Compose New <span className="italic text-accent">Manuscript</span></h1>
-        <p className="text-text-muted max-w-xl mx-auto body-lg">
-          Transform your intellectual sparks into enduring narratives. Your perspective is the bridge to our community's evolution.
-        </p>
+    <div className="container-narrow section">
+      <div className="animate-in">
+        <p className="label-md text-muted mb-2">Compose</p>
+        <h1 className="headline-lg mb-8">New Essay</h1>
       </div>
 
-      <form action={createPost} className="card p-12 bg-white shadow-lg animate-fade-in reveal-1">
-        <div className="space-y-10">
-          <div>
-            <label className="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-4 block">
-              Manuscript Title
-            </label>
-            <input
-              name="title"
-              type="text"
-              className="w-full text-3xl font-serif border-none bg-transparent p-0 focus:ring-0 focus:outline-none placeholder:text-outline"
-              placeholder="The Resonance of Silent Spaces..."
-              required
-            />
-            <div className="h-px w-full bg-outline mt-4"></div>
-          </div>
+      <form action={createPost} className="animate-in delay-1">
+        <div className="form-group">
+          <input
+            name="title"
+            type="text"
+            className="form-input form-input-lg"
+            placeholder="Your essay title..."
+            required
+          />
+        </div>
 
-          <div>
-            <label className="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-4 block">
-              Narrative Content
-            </label>
-            <textarea
-              name="content"
-              rows={15}
-              className="w-full bg-surface-low border border-outline rounded-lg p-8 focus:bg-white focus:border-primary transition-all font-sans text-lg leading-relaxed placeholder:text-text-muted/40"
-              placeholder="Begin weaving your story here..."
-              required
-            />
-          </div>
+        <div className="form-group">
+          <textarea
+            name="content"
+            className="form-textarea"
+            placeholder="Begin writing your narrative..."
+            required
+          />
+        </div>
 
-          <div className="pt-8 flex flex-col sm:flex-row justify-between items-center gap-6 border-t border-outline">
-            <div className="flex items-center gap-4 text-[10px] font-bold text-text-muted uppercase tracking-widest">
-              <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-green-500"></div> Auto-saving enabled</span>
-            </div>
-            
-            <div className="flex gap-4 w-full sm:w-auto">
-              <button type="button" className="btn btn-secondary flex-1 sm:flex-initial py-3 px-8 text-[11px]">
-                <Save size={14} className="mr-2" />
-                Store Draft
-              </button>
-              <button type="submit" className="btn btn-primary flex-1 sm:flex-initial py-3 px-10 text-[11px]">
-                <Send size={14} className="mr-2" />
-                Publish to Feed
-              </button>
-            </div>
-          </div>
+        <div className="flex items-center gap-3 mb-8" style={{ padding: '1rem', background: 'var(--surface-low)', borderRadius: 'var(--radius-sm)' }}>
+          <input
+            type="checkbox"
+            id="published"
+            name="published"
+            style={{ width: '1.25rem', height: '1.25rem', accentColor: 'var(--primary-container)' }}
+          />
+          <label htmlFor="published" style={{ fontSize: '0.9rem', fontWeight: 500, textTransform: 'none', letterSpacing: 'normal', color: 'var(--on-surface)', marginBottom: 0 }}>
+            Publish immediately
+          </label>
+        </div>
+
+        <div className="flex gap-4">
+          <button type="submit" className="btn btn-primary btn-lg">
+            Publish Essay
+          </button>
+          <button type="submit" className="btn btn-ghost btn-lg">
+            Save as Draft
+          </button>
         </div>
       </form>
     </div>

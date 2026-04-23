@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { UserPlus, Mail, Lock, User, ArrowRight } from "lucide-react";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -19,105 +18,62 @@ export default function RegisterPage() {
     setError("");
 
     try {
-      const response = await fetch("/api/register", {
+      const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
       });
 
-      if (response.ok) {
+      if (res.ok) {
         router.push("/auth/login?registered=true");
       } else {
-        const data = await response.json();
-        setError(data.error || "Registration failed");
+        const data = await res.json();
+        setError(data.error || "Registration failed.");
       }
-    } catch (err) {
-      setError("An unexpected error occurred");
+    } catch {
+      setError("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-100px)] py-12 px-6">
-      <div className="card w-full max-w-md p-12 animate-fade-in relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-1 bg-accent"></div>
-        
-        <div className="text-center mb-12">
-          <div className="w-12 h-12 bg-surface-low rounded-full flex items-center justify-center mx-auto mb-6">
-            <UserPlus size={20} className="text-accent" />
-          </div>
-          <h1 className="headline-md mb-3">Join the Collective</h1>
-          <p className="text-text-muted text-sm max-w-[280px] mx-auto leading-relaxed">
-            Begin your journey with Ellipsonic. Shape the future of editorial discourse.
+    <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 72px)' }}>
+      <div className="card-static animate-in" style={{ width: '100%', maxWidth: '420px', padding: '2.5rem' }}>
+        <div className="text-center mb-8">
+          <h1 className="headline-md" style={{ marginBottom: '0.5rem' }}>Create Account</h1>
+          <p className="text-muted" style={{ fontSize: '0.9rem' }}>
+            Join the Ellipsonic editorial community.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
-            <div className="badge badge-danger w-full py-3 px-4 flex items-center justify-center animate-shake">
-              {error}
-            </div>
-          )}
+        <form onSubmit={handleSubmit}>
+          {error && <div className="alert alert-error mb-6">{error}</div>}
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-text-muted flex items-center gap-2">
-              <User size={12} /> Pen Name / Identity
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full"
-              placeholder="e.g. Julian Barnes"
-              required
-            />
+          <div className="form-group">
+            <label className="form-label" htmlFor="reg-name">Full Name</label>
+            <input id="reg-name" type="text" value={name} onChange={(e) => setName(e.target.value)} className="form-input" placeholder="Jane Austen" required />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-text-muted flex items-center gap-2">
-              <Mail size={12} /> Communication Address
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full"
-              placeholder="name@example.com"
-              required
-            />
+          <div className="form-group">
+            <label className="form-label" htmlFor="reg-email">Email Address</label>
+            <input id="reg-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-input" placeholder="jane@example.com" required />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-text-muted flex items-center gap-2">
-              <Lock size={12} /> Access Passphrase
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full"
-              placeholder="••••••••"
-              required
-            />
+          <div className="form-group">
+            <label className="form-label" htmlFor="reg-password">Password</label>
+            <input id="reg-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-input" placeholder="••••••••" required />
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn btn-primary w-full py-4 text-[11px] group mt-4"
-          >
-            {loading ? "Initializing..." : "Establish Credentials"}
-            {!loading && <ArrowRight size={14} className="ml-2 group-hover:translate-x-1 transition-transform" />}
+          <button type="submit" disabled={loading} className="btn btn-primary btn-full btn-lg mt-4" style={{ opacity: loading ? 0.7 : 1 }}>
+            {loading ? "Creating Account..." : "Create Account"}
           </button>
         </form>
 
-        <div className="mt-12 text-center text-xs font-medium text-text-muted">
-          Already a member?{" "}
-          <Link href="/auth/login" className="text-accent font-bold hover:underline transition-all">
-            Access Portal
-          </Link>
-        </div>
+        <p className="text-center mt-6" style={{ fontSize: '0.85rem', color: 'var(--on-surface-variant)' }}>
+          Already have an account?{" "}
+          <Link href="/auth/login" style={{ color: 'var(--primary-container)', fontWeight: 600 }}>Sign In</Link>
+        </p>
       </div>
     </div>
   );

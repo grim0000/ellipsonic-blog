@@ -2,52 +2,56 @@
 
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { LogOut, PlusCircle, LayoutDashboard, Feather } from "lucide-react";
+import { LogOut, PenSquare, LayoutDashboard, ShieldCheck } from "lucide-react";
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const role = (session?.user as any)?.role;
 
   return (
-    <nav className="glass sticky top-0 z-50 py-5">
-      <div className="container flex justify-between items-center">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white transition-all group-hover:rotate-12">
-            <Feather size={20} />
-          </div>
-          <span className="font-display text-xl font-bold tracking-tight">
-            Editorial<span className="text-accent">Lume</span>
-          </span>
+    <nav className="navbar">
+      <div className="container">
+        <Link href="/" className="navbar-brand">
+          Ellip<span>sonic</span>
         </Link>
 
-        <div className="flex items-center gap-8 font-display text-sm font-bold uppercase tracking-widest">
-          <div className="hidden md:flex gap-8">
-            <Link href="/" className="hover:text-accent transition-colors">Dispatches</Link>
-            <Link href="/archives" className="hover:text-accent transition-colors">Archives</Link>
-          </div>
-          
-          <div className="h-4 w-px bg-outline mx-2 hidden md:block"></div>
-          
+        <div className="navbar-links">
+          <Link href="/">Essays</Link>
+          <Link href="/archives">Archives</Link>
+          {role === "ADMIN" && (
+            <Link href="/admin" style={{ color: 'var(--tertiary)', fontWeight: 600 }}>
+              <span className="flex items-center gap-2">
+                <ShieldCheck size={14} />
+                Admin
+              </span>
+            </Link>
+          )}
+        </div>
+
+        <div className="navbar-actions">
           {session ? (
-            <div className="flex items-center gap-6">
-              <Link href="/dashboard" className="flex items-center gap-2 hover:text-accent transition-colors">
+            <>
+              <Link href="/dashboard" className="btn btn-ghost btn-sm">
                 <LayoutDashboard size={16} />
                 Dashboard
               </Link>
-              <Link href="/posts/new" className="btn btn-primary py-2 px-6 text-xs">
-                <PlusCircle size={14} className="mr-2" />
-                New Entry
+              <Link href="/posts/new" className="btn btn-primary btn-sm">
+                <PenSquare size={16} />
+                New Essay
               </Link>
-              <button 
+              <button
                 onClick={() => signOut()}
-                className="p-2 hover:bg-surface-low rounded-full transition-colors text-text-muted hover:text-red-500"
+                className="btn btn-ghost btn-sm"
+                style={{ padding: '0.5rem' }}
               >
-                <LogOut size={18} />
+                <LogOut size={16} />
               </button>
-            </div>
+            </>
           ) : (
-            <Link href="/auth/login" className="btn btn-primary py-2 px-8 text-xs">
-              Journal Access
-            </Link>
+            <>
+              <Link href="/auth/login" className="btn btn-ghost btn-sm">Sign In</Link>
+              <Link href="/auth/register" className="btn btn-primary btn-sm">Get Started</Link>
+            </>
           )}
         </div>
       </div>
