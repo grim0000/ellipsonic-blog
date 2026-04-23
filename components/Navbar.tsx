@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { LogOut, PenLine, LayoutDashboard, ShieldCheck } from "lucide-react";
+import { LogOut, PenLine, LayoutDashboard } from "lucide-react";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -18,14 +18,6 @@ export default function Navbar() {
         <div className="nav-links">
           <Link href="/" className="nav-link">Essays</Link>
           <Link href="/archives" className="nav-link">Archives</Link>
-
-          {session && role === "ADMIN" && (
-            <Link href="/admin" className="nav-link nav-link--admin">
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                <ShieldCheck size={14} /> Admin
-              </span>
-            </Link>
-          )}
 
           {session ? (
             <>

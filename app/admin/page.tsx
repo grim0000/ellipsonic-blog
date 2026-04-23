@@ -1,41 +1,69 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import { Users, FileText, ShieldCheck, Trash2 } from "lucide-react";
-import { adminDeletePost } from "@/lib/actions";
+import {
+  Users, FileText, ShieldCheck, Trash2,
+  Eye, EyeOff, ArrowUpDown, Lock
+} from "lucide-react";
+import {
+  adminDeletePost, adminTogglePublish,
+  adminToggleRole, adminDeleteUser
+} from "@/lib/actions";
 
 export default async function AdminPage() {
   const session = await auth();
   if ((session?.user as any)?.role !== "ADMIN") redirect("/");
 
-  const [usersCount, postsCount, recentUsers, recentPosts] = await Promise.all([
+  const [
+    usersCount,
+    postsCount,
+    publishedCount,
+    draftCount,
+    recentUsers,
+    allPosts,
+  ] = await Promise.all([
     prisma.user.count(),
     prisma.post.count(),
-    prisma.user.findMany({ take: 8, orderBy: { createdAt: "desc" } }),
-    prisma.post.findMany({
-      take: 6,
+    prisma.post.count({ where: { published: true } }),
+    prisma.post.count({ where: { published: false } }),
+    prisma.user.findMany({
       orderBy: { createdAt: "desc" },
-      include: { author: { select: { name: true } } },
+      include: { _count: { select: { posts: true } } },
+    }),
+    prisma.post.findMany({
+      orderBy: { createdAt: "desc" },
+      include: { author: { select: { name: true, email: true } } },
     }),
   ]);
+
+  const currentUserId = (session?.user as any)?.id;
 
   return (
     <div className="container section">
       <div className="animate-in">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <div style={{ padding: '0.75rem', background: 'linear-gradient(135deg, var(--primary), var(--primary-container))', borderRadius: 'var(--r-lg)', color: 'white' }}>
+          <div style={{
+            padding: '0.75rem',
+            background: 'linear-gradient(135deg, var(--primary), var(--primary-container))',
+            borderRadius: 'var(--r-lg)',
+            color: 'white'
+          }}>
             <ShieldCheck size={28} />
           </div>
           <div>
             <h1 className="headline-lg">Admin Portal</h1>
-            <p className="text-muted" style={{ fontSize: '0.875rem' }}>System overview and community management.</p>
+            <p className="text-muted" style={{ fontSize: '0.875rem' }}>
+              System overview and community management.
+            </p>
           </div>
+          <span className="badge badge-admin" style={{ marginLeft: 'auto' }}>
+            <Lock size={10} /> Hidden Route
+          </span>
         </div>
 
         {/* Stats Row */}
-        <div className="grid-3 mb-8">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.5rem' }} className="mb-8">
           <div className="stat-card">
             <div className="flex justify-between items-center mb-4">
               <Users size={20} style={{ color: 'var(--primary-container)' }} />
@@ -46,79 +74,150 @@ export default async function AdminPage() {
           <div className="stat-card">
             <div className="flex justify-between items-center mb-4">
               <FileText size={20} style={{ color: 'var(--primary-container)' }} />
-              <span className="stat-label">Total Essays</span>
+              <span className="stat-label">Total Posts</span>
             </div>
             <p className="stat-number">{postsCount}</p>
           </div>
+          <div className="stat-card">
+            <div className="flex justify-between items-center mb-4">
+              <Eye size={20} style={{ color: '#16a34a' }} />
+              <span className="stat-label">Published</span>
+            </div>
+            <p className="stat-number">{publishedCount}</p>
+          </div>
           <div className="stat-card stat-card--accent">
             <div className="flex justify-between items-center mb-4">
-              <ShieldCheck size={20} />
-              <span className="stat-label" style={{ color: 'rgba(255,255,255,0.7)' }}>System</span>
+              <EyeOff size={20} />
+              <span className="stat-label" style={{ color: 'rgba(255,255,255,0.7)' }}>Drafts</span>
             </div>
-            <p style={{ fontSize: '1.25rem', fontWeight: 600 }}>Optimal</p>
+            <p className="stat-number">{draftCount}</p>
           </div>
         </div>
 
-        {/* Data Grid */}
-        <div className="grid-2">
-          {/* Recent Members */}
-          <div>
-            <h2 className="headline-md mb-4">Recent Members</h2>
-            <div className="card-static" style={{ overflow: 'hidden' }}>
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>User</th>
-                    <th>Role</th>
-                    <th className="text-right">Joined</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentUsers.map((u: any) => (
-                    <tr key={u.id}>
-                      <td>
-                        <div style={{ fontWeight: 600 }}>{u.name || "—"}</div>
-                        <div className="text-muted" style={{ fontSize: '0.75rem' }}>{u.email}</div>
-                      </td>
-                      <td>
-                        <span className={u.role === "ADMIN" ? "badge badge-admin" : "badge badge-user"}>
-                          {u.role}
-                        </span>
-                      </td>
-                      <td className="text-right text-muted">
-                        {new Date(u.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Global Feed */}
-          <div>
-            <h2 className="headline-md mb-4">Global Feed</h2>
-            <div className="space-y">
-              {recentPosts.map((post: any) => (
-                <div key={post.id} className="card-static" style={{ padding: '1.25rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '1rem', fontWeight: 600 }}>
-                      {post.title}
-                    </h4>
-                    <p className="text-muted" style={{ fontSize: '0.75rem' }}>
-                      By {post.author.name || "Anonymous"} &middot; {new Date(post.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <form action={adminDeletePost}>
-                    <input type="hidden" name="postId" value={post.id} />
-                    <button type="submit" className="btn btn-danger btn-sm">
-                      <Trash2 size={13} /> Remove
-                    </button>
-                  </form>
-                </div>
+        {/* ── User Management ── */}
+        <h2 className="headline-md mb-4">
+          <Users size={20} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '0.5rem' }} />
+          User Management
+        </h2>
+        <div className="card-static mb-8" style={{ overflow: 'auto' }}>
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Posts</th>
+                <th>Role</th>
+                <th>Joined</th>
+                <th className="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recentUsers.map((u: any) => (
+                <tr key={u.id}>
+                  <td>
+                    <div style={{ fontWeight: 600 }}>{u.name || "—"}</div>
+                    <div className="text-muted" style={{ fontSize: '0.75rem' }}>{u.email}</div>
+                  </td>
+                  <td>
+                    <span style={{ fontSize: '0.875rem', fontWeight: 500 }}>{u._count.posts}</span>
+                  </td>
+                  <td>
+                    <span className={u.role === "ADMIN" ? "badge badge-admin" : "badge badge-user"}>
+                      {u.role}
+                    </span>
+                  </td>
+                  <td className="text-muted" style={{ fontSize: '0.8125rem' }}>
+                    {new Date(u.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                  </td>
+                  <td className="text-right">
+                    {u.id !== currentUserId ? (
+                      <div className="flex gap-2" style={{ justifyContent: 'flex-end' }}>
+                        <form action={adminToggleRole}>
+                          <input type="hidden" name="userId" value={u.id} />
+                          <button type="submit" className="btn btn-secondary btn-sm" title={u.role === "ADMIN" ? "Demote to User" : "Promote to Admin"}>
+                            <ArrowUpDown size={13} />
+                            {u.role === "ADMIN" ? "Demote" : "Promote"}
+                          </button>
+                        </form>
+                        <form action={adminDeleteUser}>
+                          <input type="hidden" name="userId" value={u.id} />
+                          <button type="submit" className="btn btn-danger btn-sm" title="Delete user and all their posts">
+                            <Trash2 size={13} /> Delete
+                          </button>
+                        </form>
+                      </div>
+                    ) : (
+                      <span className="text-muted" style={{ fontSize: '0.75rem', fontStyle: 'italic' }}>You</span>
+                    )}
+                  </td>
+                </tr>
               ))}
-            </div>
-          </div>
+            </tbody>
+          </table>
+        </div>
+
+        {/* ── Content Management ── */}
+        <h2 className="headline-md mb-4">
+          <FileText size={20} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '0.5rem' }} />
+          Content Management
+        </h2>
+        <div className="card-static" style={{ overflow: 'auto' }}>
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th className="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allPosts.map((post: any) => (
+                <tr key={post.id}>
+                  <td>
+                    <span style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, fontSize: '0.9375rem' }}>
+                      {post.title}
+                    </span>
+                  </td>
+                  <td>
+                    <div style={{ fontSize: '0.875rem' }}>{post.author.name || "—"}</div>
+                    <div className="text-muted" style={{ fontSize: '0.7rem' }}>{post.author.email}</div>
+                  </td>
+                  <td>
+                    <span className={post.published ? "badge badge-published" : "badge badge-draft"}>
+                      {post.published ? "Published" : "Draft"}
+                    </span>
+                  </td>
+                  <td className="text-muted" style={{ fontSize: '0.8125rem' }}>
+                    {new Date(post.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                  </td>
+                  <td className="text-right">
+                    <div className="flex gap-2" style={{ justifyContent: 'flex-end' }}>
+                      <form action={adminTogglePublish}>
+                        <input type="hidden" name="postId" value={post.id} />
+                        <button type="submit" className="btn btn-secondary btn-sm" title={post.published ? "Unpublish" : "Publish"}>
+                          {post.published ? <><EyeOff size={13} /> Hide</> : <><Eye size={13} /> Publish</>}
+                        </button>
+                      </form>
+                      <form action={adminDeletePost}>
+                        <input type="hidden" name="postId" value={post.id} />
+                        <button type="submit" className="btn btn-danger btn-sm">
+                          <Trash2 size={13} /> Delete
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {allPosts.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="text-center text-muted" style={{ padding: '3rem' }}>
+                    No posts in the system yet.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
