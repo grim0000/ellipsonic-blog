@@ -43,7 +43,7 @@ export default function RegisterPage() {
         <div className="text-center mb-8">
           <h1 className="headline-md mb-2">Create Account</h1>
           <p className="text-muted" style={{ fontSize: '0.875rem' }}>
-            Join the Ellipsonic editorial community.
+            Join the Inkwell writing community.
           </p>
         </div>
 
