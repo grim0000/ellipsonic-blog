@@ -23,10 +23,10 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
 
         <article>
           <header className="article-header">
-            {post.image && (
+            {(post as any).image && (
               <div style={{ marginBottom: '2.5rem', borderRadius: 'var(--r-xl)', overflow: 'hidden', boxShadow: 'var(--shadow-ambient)' }}>
                 <img 
-                  src={post.image} 
+                  src={(post as any).image} 
                   alt={post.title} 
                   style={{ width: '100%', maxHeight: '500px', objectFit: 'cover' }}
                 />

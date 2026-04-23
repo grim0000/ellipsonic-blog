@@ -68,7 +68,7 @@ async function main() {
     {
       title: "Curating Your Digital Space",
       content: "Our digital environments are just as important as our physical ones. From the apps we use to the people we follow, every digital touchpoint shapes our mental state.\n\nDigital curation is the practice of intentionally choosing what enters our consciousness. It's about quality over quantity, depth over speed. It's time to declutter our digital lives and make room for what truly matters.",
-      image: "https://images.unsplash.com/photo-148441785559c-449732fe4701?auto=format&fit=crop&q=80&w=1200",
+      image: "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&q=80&w=1200",
       published: true,
       authorId: admin.id,
     }

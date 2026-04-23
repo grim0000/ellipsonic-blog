@@ -187,7 +187,7 @@ export async function adminSeedDatabase() {
     {
       title: "Curating Your Digital Space",
       content: "Our digital environments are just as important as our physical ones...",
-      image: "https://images.unsplash.com/photo-148441785559c-449732fe4701?auto=format&fit=crop&q=80&w=1200",
+      image: "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&q=80&w=1200",
       published: true,
     }
   ];
