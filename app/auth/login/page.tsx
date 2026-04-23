@@ -17,24 +17,29 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+    try {
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
 
-    if (result?.error) {
-      setError("Invalid email or password. Please try again.");
+      if (res?.error) {
+        setError("Invalid email or password");
+      } else {
+        router.push("/dashboard");
+        router.refresh();
+      }
+    } catch (err) {
+      setError("An unexpected error occurred");
+    } finally {
       setLoading(false);
-    } else {
-      router.push("/dashboard");
-      router.refresh();
     }
   };
 
   return (
-    <div className="auth-page">
-      <div className="card-static auth-card animate-in">
+    <div className="container section flex justify-center">
+      <div className="card-static animate-in" style={{ width: '100%', maxWidth: '420px', padding: '3rem 2.5rem' }}>
         <div className="text-center mb-8">
           <h1 className="headline-md mb-2">Welcome Back</h1>
           <p className="text-muted" style={{ fontSize: '0.875rem' }}>
@@ -43,7 +48,7 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={handleSubmit}>
-          {error && <div className="alert-error">{error}</div>}
+          {error && <div className="alert-error" style={{ marginBottom: '1.5rem', fontSize: '0.8125rem' }}>{error}</div>}
 
           <div className="form-group">
             <label className="form-label">Email Address</label>
@@ -73,18 +78,20 @@ export default function LoginPage() {
             type="submit"
             disabled={loading}
             className="btn btn-primary w-full"
-            style={{ padding: '0.875rem', marginTop: '0.5rem' }}
+            style={{ padding: '0.875rem', marginTop: '1rem' }}
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
-        <p className="text-center mt-6 text-muted" style={{ fontSize: '0.8125rem' }}>
-          Don&apos;t have an account?{" "}
-          <Link href="/auth/register" style={{ color: 'var(--primary-container)', fontWeight: 600 }}>
-            Register
-          </Link>
-        </p>
+        <div className="text-center mt-8">
+          <p className="text-muted" style={{ fontSize: '0.875rem' }}>
+            New to the platform?{" "}
+            <Link href="/auth/register" className="link" style={{ fontWeight: 600 }}>
+              Join the community
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

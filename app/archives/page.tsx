@@ -2,6 +2,12 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Archives | Inkwell",
+  description: "Browse the full collection of editorial essays and narratives.",
+};
 
 export default async function ArchivesPage() {
   const posts = await prisma.post.findMany({

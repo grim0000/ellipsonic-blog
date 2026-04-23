@@ -3,11 +3,12 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import {
   Users, FileText, ShieldCheck, Trash2,
-  Eye, EyeOff, ArrowUpDown, Lock
+  Eye, EyeOff, ArrowUpDown, Lock, Database
 } from "lucide-react";
 import {
   adminDeletePost, adminTogglePublish,
-  adminToggleRole, adminDeleteUser
+  adminToggleRole, adminDeleteUser,
+  adminSeedDatabase
 } from "@/lib/actions";
 
 export default async function AdminPage() {
@@ -218,6 +219,19 @@ export default async function AdminPage() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* ── System Health ── */}
+        <div className="flex justify-between items-center p-6 mt-12 mb-8" style={{ background: 'var(--primary-fixed)', borderRadius: 'var(--r-lg)', border: '1px solid var(--primary-container)' }}>
+          <div>
+            <h3 style={{ fontWeight: 700, marginBottom: '0.25rem' }}>System Health</h3>
+            <p className="text-muted" style={{ fontSize: '0.8125rem' }}>If production images are missing, use this to restore the premium editorial data.</p>
+          </div>
+          <form action={adminSeedDatabase}>
+            <button type="submit" className="btn btn-primary" style={{ padding: '0.75rem 1.5rem' }}>
+              <Database size={16} /> Repair Production Data
+            </button>
+          </form>
         </div>
       </div>
     </div>
