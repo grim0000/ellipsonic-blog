@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+export const dynamic = "force-dynamic";
 import PostCard from "@/components/PostCard";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
