@@ -28,7 +28,7 @@ export async function createPost(formData: FormData) {
   const image = formData.get("image") as string;
   const published = formData.get("published") === "on";
 
-  await prisma.post.create({
+  await (prisma.post as any).create({
     data: {
       title,
       content,
@@ -198,7 +198,7 @@ export async function adminSeedDatabase() {
   // Clear existing posts first to avoid duplicates if desired, or just create new ones
   // For repair, we'll just add them.
   for (const postData of blogPosts) {
-    await prisma.post.create({
+    await (prisma.post as any).create({
       data: {
         ...postData,
         authorId: adminId,
