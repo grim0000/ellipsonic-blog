@@ -33,24 +33,21 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 72px)' }}>
-      <div className="card-static animate-in" style={{ width: '100%', maxWidth: '420px', padding: '2.5rem' }}>
+    <div className="auth-page">
+      <div className="card-static auth-card animate-in">
         <div className="text-center mb-8">
-          <h1 className="headline-md" style={{ marginBottom: '0.5rem' }}>Welcome Back</h1>
-          <p className="text-muted" style={{ fontSize: '0.9rem' }}>
+          <h1 className="headline-md mb-2">Welcome Back</h1>
+          <p className="text-muted" style={{ fontSize: '0.875rem' }}>
             Sign in to your editorial dashboard.
           </p>
         </div>
 
         <form onSubmit={handleSubmit}>
-          {error && (
-            <div className="alert alert-error mb-6">{error}</div>
-          )}
+          {error && <div className="alert-error">{error}</div>}
 
           <div className="form-group">
-            <label className="form-label" htmlFor="login-email">Email Address</label>
+            <label className="form-label">Email Address</label>
             <input
-              id="login-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -61,9 +58,8 @@ export default function LoginPage() {
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="login-password">Password</label>
+            <label className="form-label">Password</label>
             <input
-              id="login-password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -76,14 +72,14 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="btn btn-primary btn-full btn-lg mt-4"
-            style={{ opacity: loading ? 0.7 : 1 }}
+            className="btn btn-primary w-full"
+            style={{ padding: '0.875rem', marginTop: '0.5rem' }}
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
-        <p className="text-center mt-6" style={{ fontSize: '0.85rem', color: 'var(--on-surface-variant)' }}>
+        <p className="text-center mt-6 text-muted" style={{ fontSize: '0.8125rem' }}>
           Don&apos;t have an account?{" "}
           <Link href="/auth/register" style={{ color: 'var(--primary-container)', fontWeight: 600 }}>
             Register

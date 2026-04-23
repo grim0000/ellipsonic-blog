@@ -2,56 +2,53 @@
 
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { LogOut, PenSquare, LayoutDashboard, ShieldCheck } from "lucide-react";
+import { LogOut, PenLine, LayoutDashboard, ShieldCheck } from "lucide-react";
 
 export default function Navbar() {
   const { data: session } = useSession();
   const role = (session?.user as any)?.role;
 
   return (
-    <nav className="navbar">
-      <div className="container">
-        <Link href="/" className="navbar-brand">
+    <nav className="nav">
+      <div className="container nav-inner">
+        <Link href="/" className="nav-brand">
           Ellip<span>sonic</span>
         </Link>
 
-        <div className="navbar-links">
-          <Link href="/">Essays</Link>
-          <Link href="/archives">Archives</Link>
-          {role === "ADMIN" && (
-            <Link href="/admin" style={{ color: 'var(--tertiary)', fontWeight: 600 }}>
-              <span className="flex items-center gap-2">
-                <ShieldCheck size={14} />
-                Admin
+        <div className="nav-links">
+          <Link href="/" className="nav-link">Essays</Link>
+          <Link href="/archives" className="nav-link">Archives</Link>
+
+          {session && role === "ADMIN" && (
+            <Link href="/admin" className="nav-link nav-link--admin">
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                <ShieldCheck size={14} /> Admin
               </span>
             </Link>
           )}
-        </div>
 
-        <div className="navbar-actions">
           {session ? (
             <>
-              <Link href="/dashboard" className="btn btn-ghost btn-sm">
-                <LayoutDashboard size={16} />
-                Dashboard
+              <Link href="/dashboard" className="nav-link">
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                  <LayoutDashboard size={14} /> Dashboard
+                </span>
               </Link>
               <Link href="/posts/new" className="btn btn-primary btn-sm">
-                <PenSquare size={16} />
-                New Essay
+                <PenLine size={14} /> New Essay
               </Link>
               <button
                 onClick={() => signOut()}
-                className="btn btn-ghost btn-sm"
-                style={{ padding: '0.5rem' }}
+                className="btn-icon"
+                title="Sign out"
               >
-                <LogOut size={16} />
+                <LogOut size={18} />
               </button>
             </>
           ) : (
-            <>
-              <Link href="/auth/login" className="btn btn-ghost btn-sm">Sign In</Link>
-              <Link href="/auth/register" className="btn btn-primary btn-sm">Get Started</Link>
-            </>
+            <Link href="/auth/login" className="btn btn-primary btn-sm">
+              Journal Access
+            </Link>
           )}
         </div>
       </div>

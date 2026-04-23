@@ -38,41 +38,69 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 72px)' }}>
-      <div className="card-static animate-in" style={{ width: '100%', maxWidth: '420px', padding: '2.5rem' }}>
+    <div className="auth-page">
+      <div className="card-static auth-card animate-in">
         <div className="text-center mb-8">
-          <h1 className="headline-md" style={{ marginBottom: '0.5rem' }}>Create Account</h1>
-          <p className="text-muted" style={{ fontSize: '0.9rem' }}>
+          <h1 className="headline-md mb-2">Create Account</h1>
+          <p className="text-muted" style={{ fontSize: '0.875rem' }}>
             Join the Ellipsonic editorial community.
           </p>
         </div>
 
         <form onSubmit={handleSubmit}>
-          {error && <div className="alert alert-error mb-6">{error}</div>}
+          {error && <div className="alert-error">{error}</div>}
 
           <div className="form-group">
-            <label className="form-label" htmlFor="reg-name">Full Name</label>
-            <input id="reg-name" type="text" value={name} onChange={(e) => setName(e.target.value)} className="form-input" placeholder="Jane Austen" required />
+            <label className="form-label">Full Name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="form-input"
+              placeholder="Julian Barnes"
+              required
+            />
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="reg-email">Email Address</label>
-            <input id="reg-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-input" placeholder="jane@example.com" required />
+            <label className="form-label">Email Address</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="form-input"
+              placeholder="julian@example.com"
+              required
+            />
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="reg-password">Password</label>
-            <input id="reg-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-input" placeholder="••••••••" required />
+            <label className="form-label">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="form-input"
+              placeholder="••••••••"
+              required
+            />
           </div>
 
-          <button type="submit" disabled={loading} className="btn btn-primary btn-full btn-lg mt-4" style={{ opacity: loading ? 0.7 : 1 }}>
-            {loading ? "Creating Account..." : "Create Account"}
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn btn-primary w-full"
+            style={{ padding: '0.875rem', marginTop: '0.5rem' }}
+          >
+            {loading ? "Creating Account..." : "Register"}
           </button>
         </form>
 
-        <p className="text-center mt-6" style={{ fontSize: '0.85rem', color: 'var(--on-surface-variant)' }}>
+        <p className="text-center mt-6 text-muted" style={{ fontSize: '0.8125rem' }}>
           Already have an account?{" "}
-          <Link href="/auth/login" style={{ color: 'var(--primary-container)', fontWeight: 600 }}>Sign In</Link>
+          <Link href="/auth/login" style={{ color: 'var(--primary-container)', fontWeight: 600 }}>
+            Sign In
+          </Link>
         </p>
       </div>
     </div>
