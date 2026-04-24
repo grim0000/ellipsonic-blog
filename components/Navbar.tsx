@@ -12,7 +12,7 @@ export default function Navbar() {
     <nav className="nav">
       <div className="container nav-inner">
         <Link href="/" className="nav-brand">
-          Ink<span>well</span>
+          Blogger<span>Stop</span>
         </Link>
 
         <div className="nav-links">

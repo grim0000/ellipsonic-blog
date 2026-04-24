@@ -1,4 +1,4 @@
-# Editorial Lume | Premium Blog Platform
+# BloggerStop | Premium Blog Platform
 
 A sophisticated, role-based blog platform built with **Next.js**, **Node.js**, and **PostgreSQL**.
 

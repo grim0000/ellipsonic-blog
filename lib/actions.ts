@@ -5,6 +5,8 @@ import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
+import { writeFile, mkdir } from "fs/promises";
+import path from "path";
 
 // ─── Helper: verify admin role ───
 async function requireAdmin() {
@@ -25,14 +27,33 @@ export async function createPost(formData: FormData) {
 
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
-  const image = formData.get("image") as string;
+  const imageFile = formData.get("image") as File;
   const published = formData.get("published") === "on";
+
+  let imageUrl = null;
+
+  if (imageFile && imageFile.size > 0) {
+    try {
+      const bytes = await imageFile.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      
+      const fileName = `${Date.now()}-${imageFile.name.replace(/\s+/g, '-')}`;
+      const uploadDir = path.join(process.cwd(), "public/uploads");
+      const uploadPath = path.join(uploadDir, fileName);
+      
+      await mkdir(uploadDir, { recursive: true });
+      await writeFile(uploadPath, buffer);
+      imageUrl = `/uploads/${fileName}`;
+    } catch (error) {
+      console.error("Error saving image:", error);
+    }
+  }
 
   await (prisma.post as any).create({
     data: {
       title,
       content,
-      image: image || null,
+      image: imageUrl,
       published,
       authorId: (session.user as any).id,
     },

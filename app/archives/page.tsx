@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Archives | Inkwell",
+  title: "Archives | BloggerStop",
   description: "Browse the full collection of editorial essays and narratives.",
 };
 

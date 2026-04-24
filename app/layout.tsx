@@ -4,7 +4,7 @@ import Providers from "@/components/Providers";
 import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
-  title: "Inkwell | A Premium Blog Platform",
+  title: "BloggerStop | A Premium Blog Platform",
   description: "A sophisticated space for modern narratives and editorial excellence.",
 };
 

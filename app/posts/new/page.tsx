@@ -29,16 +29,16 @@ export default async function NewPostPage() {
           </div>
 
           <div className="form-group">
-            <label className="form-label" style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Featured Image URL (Optional)</label>
+            <label className="form-label" style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Featured Image (Optional)</label>
             <input
-              type="url"
+              type="file"
+              accept="image/*"
               name="image"
               className="form-input"
-              placeholder="https://images.unsplash.com/photo-..."
-              style={{ fontSize: '0.875rem' }}
+              style={{ fontSize: '0.875rem', padding: '0.5rem' }}
             />
             <p className="text-muted mt-2" style={{ fontSize: '0.7rem' }}>
-              Tip: Use high-resolution URLs from Unsplash for best results.
+              Tip: Upload a high-resolution image from your device for the best results.
             </p>
           </div>
 

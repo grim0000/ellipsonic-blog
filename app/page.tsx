@@ -34,7 +34,7 @@ export default async function Home() {
             </h1>
 
             <p className="body-lg mb-8" style={{ maxWidth: '520px' }}>
-              Welcome to Inkwell. A refined space where words hold weight
+              Welcome to BloggerStop. A refined space where words hold weight
               and ideas find their rhythm.
             </p>
 
@@ -82,7 +82,7 @@ export default async function Home() {
       {/* ── Footer ── */}
       <footer style={{ padding: '3rem 0', borderTop: '1px solid var(--outline)', textAlign: 'center' }}>
         <p className="text-muted" style={{ fontSize: '0.8125rem' }}>
-          &copy; {new Date().getFullYear()} Inkwell. All rights reserved.
+          &copy; {new Date().getFullYear()} BloggerStop. All rights reserved.
         </p>
       </footer>
     </>

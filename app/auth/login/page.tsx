@@ -43,7 +43,7 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <h1 className="headline-md mb-2">Welcome Back</h1>
           <p className="text-muted" style={{ fontSize: '0.875rem' }}>
-            Sign in to your editorial dashboard.
+            Sign in to your BloggerStop dashboard.
           </p>
         </div>
 
